@@ -61,7 +61,7 @@ export default {
     }
   },
   created(){
-    this.baseOrigin=window.location.origin;
+    this.baseOrigin=window?window.location.origin:'';
     this.loadBlog();
   },
   methods:{
