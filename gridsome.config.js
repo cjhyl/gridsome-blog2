@@ -7,13 +7,13 @@
 module.exports = {
   siteName: 'cjhyl',
   plugins: [
-    {//读取本地md文件中的数据
-      use: '@gridsome/source-filesystem',
-      options: {
-        typeName: 'BlogPost',
-        path: './content/blog/**/*.md',
-      }
-    },
+    // {//读取本地md文件中的数据
+    //   use: '@gridsome/source-filesystem',
+    //   options: {
+    //     typeName: 'BlogPost',
+    //     path: './content/blog/**/*.md',
+    //   }
+    // },
     {//使用strapi数据
       use: '@gridsome/source-strapi',
       options: {
