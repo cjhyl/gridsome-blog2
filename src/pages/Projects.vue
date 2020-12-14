@@ -19,7 +19,7 @@
           plain 
           circle 
           style="margin-left:10px;"
-          v-clipboard:copy="baseOrigin+$route.fullPath"
+          v-clipboard:copy="MY_URL+$route.fullPath"
           v-clipboard:success="onCopyOk" 
           v-clipboard:error="onCopyError"
         >
@@ -36,7 +36,7 @@
                 <el-button 
                   style="float: right; padding: 3px 0" 
                   icon="el-icon-share" 
-                  v-clipboard:copy="baseOrigin+'/project/'+r.id"
+                  v-clipboard:copy="MY_URL+'/project/'+r.id"
                   v-clipboard:success="onCopyOk" 
                   v-clipboard:error="onCopyError"
                   type="text"
@@ -116,7 +116,6 @@ export default {
   },
   data(){
     return {
-      baseOrigin:'',
       seachStr:'',
       splitProjects:[],
       pageIndex:1,
@@ -124,7 +123,6 @@ export default {
     }
   },
   mounted(){
-    // this.baseOrigin=window.location.origin;
     this.doSearch();
   },
   computed:{

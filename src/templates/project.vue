@@ -11,7 +11,7 @@
                 <el-button 
                   style="padding: 3px 0" 
                   icon="el-icon-share" 
-                  v-clipboard:copy="baseOrigin+$route.fullPath"
+                  v-clipboard:copy="MY_URL+$route.fullPath"
                   v-clipboard:success="onCopyOk" 
                   v-clipboard:error="onCopyError"
                   type="text"
@@ -92,14 +92,6 @@ export default {
     return {
       title: this.$route.params.id,
     }
-  },
-  data(){
-    return {
-      baseOrigin:'',
-    }
-  },
-  created(){
-    // this.baseOrigin=window.location.origin;
   },
   computed:{
     project(){
