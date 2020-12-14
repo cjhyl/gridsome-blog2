@@ -109,9 +109,9 @@ export default {
     this.loadProjects();
   },
   mounted(){
-    if(window){
-      this.baseOrigin=window.location.origin;
-    }
+    // if(window){
+    //   this.baseOrigin=window.location.origin;
+    // }
   },
   computed:{
     total(){

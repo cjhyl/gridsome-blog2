@@ -61,9 +61,9 @@ export default {
     }
   },
   created(){
-    if(window){
-      this.baseOrigin=window.location.origin;
-    }
+    // if(window){
+    //   this.baseOrigin=window.location.origin;
+    // }
     this.loadBlog();
   },
   methods:{
