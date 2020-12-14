@@ -115,6 +115,8 @@ export default {
   },
   methods:{
     onCopyOk(){
+      console.log('arguments',arguments);
+      console.log('MY_URL',this.MY_URL);
       this.$confirm('链接已复制,去分享给好友吧!!', '分享', {
         confirmButtonText: '确定',
         showCancelButton: false,
