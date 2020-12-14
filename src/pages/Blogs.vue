@@ -89,7 +89,9 @@ export default {
     this.loadBlogs();
   },
   mounted(){
-    this.baseOrigin=window?window.location.origin:'';
+    if(window){
+      this.baseOrigin=window.location.origin;
+    }
   },
   computed:{
     total(){
