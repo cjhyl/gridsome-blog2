@@ -17,7 +17,7 @@ export default function (Vue, { router, head, isClient }) {
     data () {
       return {
         GRIDSOME_API_URL: process.env.GRIDSOME_API_URL,
-        MY_URL: 'https://gridsome-blog2-24ezpkksv.vercel.app'
+        MY_URL: 'https://gridsome-blog2.vercel.app'
       }
     }
   })
