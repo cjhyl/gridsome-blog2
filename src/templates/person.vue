@@ -1,6 +1,6 @@
 <template>
   <Home>
-    <el-card v-loading="loading">
+    <el-card>
       <div slot="header" class="clearfix">
         <el-row>
             <el-col :span="16">
@@ -48,8 +48,23 @@
   </Home>
 </template>
 
+<page-query>
+query ($id: ID!) {
+  person: strapiPeople (id: $id) {
+    id
+    cname
+    ename
+    link
+    position
+    description
+    headimage{
+      url
+    }
+  }
+}
+</page-query>
+
 <script>
-import axios from 'axios'
 
 export default {
   name: 'personPage',
@@ -58,29 +73,14 @@ export default {
       title: this.$route.params.id,
     }
   },
-  data(){
-    return {
-      loading:true,
-      person:{}
+  computed:{
+    person(){
+      return this.$page.person;
     }
   },
-  created(){
-    this.loadPerson();
+  mounted(){
   },
   methods:{
-    loadPerson(){
-      var that = this;
-      axios.get(this.GRIDSOME_API_URL+'/people/'+this.$route.params.id)
-      .then(function(rl){
-        that.loading=false;
-        if(rl.status == 200){
-          that.person=rl.data
-        }
-      })
-      .catch(function(){
-        that.loading=false;
-      })
-    },
     goPeople(){
       this.$router.push('/people')
     }

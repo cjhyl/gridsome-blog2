@@ -1,6 +1,6 @@
 <template>
   <Home>
-    <el-card v-loading="loading">
+    <el-card>
       <el-tabs type="border-card">
         <el-tab-pane :label="'粉丝 '+fansTotal">
           <el-row style="min-height:200px">
@@ -69,9 +69,40 @@
   </Home>
 </template>
 
-<script>
-import axios from 'axios'
+<page-query>
+query {
+  fansData:allStrapiPeople(order:ASC){
+    edges{
+      node{
+        id
+        cname
+        ename
+        link
+        follow
+        headimage{
+          url
+        }
+      }
+    }
+  }
+  followData:allStrapiPeople(filter:{follow:{in:[true]}},order:ASC){
+    edges{
+      node{
+        id
+        cname
+        ename
+        link
+        follow
+        headimage{
+          url
+        }
+      }
+    }
+  }
+}
+</page-query>
 
+<script>
 export default {
   name: 'PeoplePage',
   metaInfo: {
@@ -79,19 +110,17 @@ export default {
   },
   data(){
     return {
-      fans:[],
-      fansLoading:true,
       fansPageIndex:1,
       fansPageSize:9,
-      follow:[],
-      followLoading:true,
       followPageIndex:1,
       followPageSize:9,
     }
   },
   computed:{
-    loading(){
-      return this.fansLoading&&this.followLoading;
+    fans(){
+      return this.$page.fansData.edges.map((item)=>{
+        return item.node;
+      })
     },
     fansTotal(){
       return this.fans.length;
@@ -99,6 +128,11 @@ export default {
     showFans(){
       var pos = (this.fansPageIndex-1)*this.fansPageSize;
       return this.fans.slice(pos,pos+this.fansPageSize)
+    },
+    follow(){
+      return this.$page.followData.edges.map((item)=>{
+        return item.node;
+      })
     },
     followTotal(){
       return this.follow.length;
@@ -110,47 +144,15 @@ export default {
     
   },
   created(){
-    this.loadFans();
-    this.loadFollow();
   },
   mounted(){
   },
   methods:{
-    loadFans(){
-      var that = this;
-      axios.get(this.GRIDSOME_API_URL+'/people')
-      .then(function(rl){
-        that.fansLoading=false;
-        if(rl.status == 200){
-          that.fans=rl.data
-        }
-      })
-      .catch(function(){
-        that.fansLoading=false;
-      })
-    },
     onFansPageChange(index){
       this.fansPageIndex=index;
     },
     clickFans(people){
       this.$router.push('/person/'+people.id)
-    },
-    loadFollow(){
-      var that = this;
-      axios.get(this.GRIDSOME_API_URL+'/people',
-        {params: {
-          follow:true
-        }}
-      )
-      .then(function(rl){
-        that.followLoading=false;
-        if(rl.status == 200){
-          that.follow=rl.data
-        }
-      })
-      .catch(function(){
-        that.followLoading=false;
-      })
     },
     onFollowPageChange(index){
       this.followPageIndex=index;

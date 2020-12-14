@@ -1,6 +1,6 @@
 <template>
   <Home>
-    <el-card v-loading="loading">
+    <el-card>
       <div slot="header" class="clearfix">
         <el-row>
             <el-col :span="16">
@@ -62,9 +62,27 @@
   </Home>
 </template>
 
+<page-query>
+query ($id: ID!) {
+  project: strapiProjects (id: $id) {
+    id
+    name
+    published_at
+    updatetime
+    star
+    watch
+    fork
+    code
+    tags{
+      title
+    }
+  }
+}
+</page-query>
+
 <script>
 import axios from 'axios'
-import utils from '../../utils'
+import utils from '../utils'
 import MarkdownIt from 'markdown-it'
 const md = new MarkdownIt()
 
@@ -78,35 +96,20 @@ export default {
   data(){
     return {
       baseOrigin:'',
-      loading:true,
-      project:{}
     }
   },
   created(){
-    // if(window){
-    //   this.baseOrigin=window.location.origin;
-    // }
-    this.loadProject();
+    // this.baseOrigin=window.location.origin;
+  },
+  computed:{
+    project(){
+      var data = this.$page.project;
+      data.updatetime=utils.formatTimeSpan(new Date(data.updatetime),'YYYY-MM-DD hh:mm:ss');
+      data.published_at=utils.formatTimeSpan(new Date(data.published_at),'YYYY-MM-DD hh:mm:ss');
+      return data;
+    }
   },
   methods:{
-    loadProject(){
-      var that = this;
-      axios.get(this.GRIDSOME_API_URL+'/projects/'+this.$route.params.id)
-      .then(function(rl){
-        that.loading=false;
-        
-        if(rl.status == 200){
-          var data = rl.data;
-          data.updatetime=utils.formatTimeSpan(new Date(data.updatetime),'YYYY-MM-DD hh:mm:ss');
-          data.published_at=utils.formatTimeSpan(new Date(data.published_at),'YYYY-MM-DD hh:mm:ss');
-          
-          that.project=data
-        }
-      })
-      .catch(function(){
-        that.loading=false;
-      })
-    },
     mdToHtml (markdown) {
       return md.render(''+markdown);
     },

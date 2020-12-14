@@ -1,6 +1,6 @@
 <template>
   <Home>
-    <el-card v-loading="loading">
+    <el-card>
       <div slot="header" class="clearfix">
         <el-row>
             <el-col :span="16">
@@ -40,9 +40,20 @@
   </Home>
 </template>
 
+<page-query>
+query ($id: ID!) {
+  blog: strapiBlogs (id: $id) {
+    id
+    title
+    publishtime
+    updatetime
+    content
+  }
+}
+</page-query>
+
 <script>
-import axios from 'axios'
-import utils from '../../utils'
+import utils from '../utils'
 import MarkdownIt from 'markdown-it'
 const md = new MarkdownIt()
 
@@ -57,34 +68,17 @@ export default {
     return {
       baseOrigin:'',
       loading:true,
-      blog:{}
     }
   },
   created(){
-    // if(window){
-    //   this.baseOrigin=window.location.origin;
-    // }
-    this.loadBlog();
+    // this.baseOrigin=window.location.origin;
+  },
+  computed:{
+    blog(){
+      return this.$page.blog;
+    }
   },
   methods:{
-    loadBlog(){
-      var that = this;
-      axios.get(this.GRIDSOME_API_URL+'/blogs/'+this.$route.params.id)
-      .then(function(rl){
-        that.loading=false;
-        
-        if(rl.status == 200){
-          var data = rl.data;
-          data.updatetime=utils.formatTimeSpan(new Date(data.updatetime),'YYYY-MM-DD hh:mm:ss');
-          data.publishtime=utils.formatTimeSpan(new Date(data.publishtime),'YYYY-MM-DD hh:mm:ss');
-          
-          that.blog=data
-        }
-      })
-      .catch(function(){
-        that.loading=false;
-      })
-    },
     mdToHtml (markdown) {
       return md.render(''+markdown);
     },

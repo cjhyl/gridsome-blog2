@@ -7,7 +7,7 @@
     >
     点击复制
     </el-button> -->
-    <div style="min-height:600px" v-loading="loading">
+    <div style="min-height:600px">
       <el-card style="margin-bottom: 20px;">
         <el-input v-model="seachStr" placeholder="请输入关键字" style="width:300px;">
         </el-input>
@@ -85,8 +85,28 @@
   </Home>
 </template>
 
+<page-query>
+query {
+  projectsData:allStrapiProjects(order:ASC){
+    edges{
+      node{
+        id
+        name
+        published_at
+        updatetime
+        star
+        watch
+        fork
+        tags{
+          title
+        }
+      }
+    }
+  }
+}
+</page-query>
+
 <script>
-import axios from 'axios'
 import utils from '../utils'
 
 export default {
@@ -98,22 +118,22 @@ export default {
     return {
       baseOrigin:'',
       seachStr:'',
-      projects:[],
       splitProjects:[],
-      loading:true,
       pageIndex:1,
       pageSize:5,
     }
   },
-  created(){
-    this.loadProjects();
-  },
   mounted(){
-    // if(window){
-    //   this.baseOrigin=window.location.origin;
-    // }
+    // this.baseOrigin=window.location.origin;
+    this.doSearch();
   },
   computed:{
+    projects(){
+      return this.$page.projectsData.edges.map(item=>{
+        item.node.updatetime=utils.formatTimeSpan(new Date(item.node.updatetime),'YYYY-MM-DD hh:mm:ss');
+        return item.node;
+      })
+    },
     total(){
       return this.splitProjects.length;
     },
@@ -123,26 +143,6 @@ export default {
     }
   },
   methods:{
-    loadProjects(){
-      var that = this;
-      axios.get(this.GRIDSOME_API_URL+'/projects')
-      .then(function(rl){
-        that.loading=false;
-        
-        if(rl.status == 200){
-          var data = rl.data;
-          rl.data.forEach(function(data){
-            data.updatetime=utils.formatTimeSpan(new Date(data.updatetime),'YYYY-MM-DD hh:mm:ss');
-          })
-          
-          that.projects=rl.data
-          that.doSearch();
-        }
-      })
-      .catch(function(){
-        that.loading=false;
-      })
-    },
     onCopyOk(){
       this.$confirm('链接已复制,去分享给好友吧!!', '分享', {
         confirmButtonText: '确定',

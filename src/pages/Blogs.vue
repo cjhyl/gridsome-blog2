@@ -7,7 +7,7 @@
     >
     点击复制
     </el-button> -->
-    <div style="min-height:600px" v-loading="loading">
+    <div style="min-height:600px">
       <el-card style="margin-bottom: 20px;">
         <el-input v-model="seachStr" placeholder="请输入关键字" style="width:300px;">
         </el-input>
@@ -65,8 +65,22 @@
   </Home>
 </template>
 
+<page-query>
+query {
+  blogsData:allStrapiBlogs(order:ASC){
+    edges{
+      node{
+        id
+        title
+        updatetime
+        content
+      }
+    }
+  }
+}
+</page-query>
+
 <script>
-import axios from 'axios'
 import utils from '../utils'
 
 export default {
@@ -78,22 +92,21 @@ export default {
     return {
       baseOrigin:'',
       seachStr:'',
-      blogs:[],
       splitBlogs:[],
-      loading:true,
       pageIndex:1,
       pageSize:5,
     }
   },
-  created(){
-    this.loadBlogs();
-  },
   mounted(){
-    // if(window){
-    //   this.baseOrigin=window.location.origin;
-    // }
+    this.doSearch();
+    // this.baseOrigin=window.location.origin;
   },
   computed:{
+    blogs(){
+      return this.$page.blogsData.edges.map((item)=>{
+        return item.node;
+      })
+    },
     total(){
       return this.splitBlogs.length;
     },
@@ -103,27 +116,6 @@ export default {
     }
   },
   methods:{
-    loadBlogs(){
-      var that = this;
-      axios.get(this.GRIDSOME_API_URL+'/blogs')
-      .then(function(rl){
-        that.loading=false;
-        
-        if(rl.status == 200){
-          var data = rl.data;
-          rl.data.forEach(function(data){
-            data.updatetime=utils.formatTimeSpan(new Date(data.updatetime),'YYYY-MM-DD hh:mm:ss');
-            data.publishtime=utils.formatTimeSpan(new Date(data.publishtime),'YYYY-MM-DD hh:mm:ss');
-          })
-          
-          that.blogs=rl.data
-          that.doSearch();
-        }
-      })
-      .catch(function(){
-        that.loading=false;
-      })
-    },
     onCopyOk(){
       this.$confirm('链接已复制,去分享给好友吧!!', '分享', {
         confirmButtonText: '确定',

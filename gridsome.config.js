@@ -7,13 +7,13 @@
 module.exports = {
   siteName: 'cjhyl',
   plugins: [
-    // {//读取本地md文件中的数据
-    //   use: '@gridsome/source-filesystem',
-    //   options: {
-    //     typeName: 'BlogPost',
-    //     path: './content/blog/**/*.md',
-    //   }
-    // },
+    {//读取本地md文件中的数据
+      use: '@gridsome/source-filesystem',
+      options: {
+        typeName: 'BlogPost',
+        path: './content/blog/**/*.md',
+      }
+    },
     {//使用strapi数据
       use: '@gridsome/source-strapi',
       options: {
@@ -32,18 +32,24 @@ module.exports = {
       }
     }
   ],
-  // templates: {
-  //   StrapiPost: [
-  //     {
-  //       path: '/post/:id',
-  //       component: './src/templates/Post.vue'
-  //     }
-  //   ],
-  //   StrapiTag: [
-  //     {
-  //       path: '/tag/:id',
-  //       component: './src/templates/Tag.vue'
-  //     }
-  //   ]
-  // }
+  templates: {
+    StrapiPeople: [
+      {
+        path: '/person/:id',
+        component: './src/templates/person.vue'
+      }
+    ],
+    StrapiBlogs: [
+      {
+        path: '/blog/:id',
+        component: './src/templates/blog.vue'
+      }
+    ],
+    StrapiProjects: [
+      {
+        path: '/project/:id',
+        component: './src/templates/project.vue'
+      }
+    ]
+  }
 }
